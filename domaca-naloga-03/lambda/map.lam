@@ -6,4 +6,4 @@ LET map = FUN f ->
   IN
   mapf
 IN
-map
+map (FUN x -> x + 1) (1::2::3::(5+4)::[])

@@ -96,3 +96,47 @@ and string_of_exp0 = function
   | e -> "(" ^ string_of_exp3 e ^ ")"
 
 let string_of_exp = string_of_exp3
+
+
+type param = Param of int
+
+type ty =
+  | ParamTy of param 
+  | IntTy
+  | BoolTy
+  | ArrowTy of ty * ty
+  | ProdTy of ty * ty
+  | ListTy of ty
+
+let rec subst_ty sbst = function
+  | ParamTy a as t ->
+      begin match List.assoc_opt a sbst with
+      | None -> t
+      | Some t' -> t'
+      end
+    | IntTy | BoolTy as t -> t
+    | ArrowTy (t1, t2) -> ArrowTy (subst_ty sbst t1, subst_ty sbst t2)
+    | ProdTy (t1, t2) -> ProdTy (subst_ty sbst t1, subst_ty sbst t2)
+    | ListTy t -> ListTy (subst_ty sbst t)
+
+let string_of_param (Param a) =
+  let max_alpha = int_of_char 'z' - int_of_char 'a' + 1 in
+  if a < max_alpha
+  then "'" ^ String.make 1 (char_of_int (int_of_char 'a' + a))
+  else "'ty" ^ string_of_int (a - max_alpha)
+
+let rec string_of_ty1 = function
+  | ArrowTy (t1, t2) ->
+    string_of_ty0 t1 ^ " -> " ^ string_of_ty0 t2
+  | ProdTy (t1, t2) ->
+    string_of_ty0 t1 ^ " * " ^ string_of_ty0 t2
+  | ListTy t ->
+    string_of_ty0 t ^ " list"
+  | t -> string_of_ty0 t
+and string_of_ty0 = function
+  | ParamTy a -> string_of_param a
+  | IntTy -> "int"
+  | BoolTy -> "bool"
+  | t -> "(" ^ string_of_ty1 t ^ ")"
+
+let string_of_ty = string_of_ty1
