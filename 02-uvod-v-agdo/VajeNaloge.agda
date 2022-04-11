@@ -55,27 +55,35 @@ module List where
         _∷_ : A → List A → List A
 
     l1 : List ℕ
-    l1 = {!   !}
+    l1 = []
 
     l2 : List ℕ
-    l2 = {!   !}
+    l2 = O ∷ S ( O ) ∷ []
 
     l3 : List ℕ
-    l3 = {!   !}
+    l3 = S ( O ) ∷ l2
 
     -- Definirajte nekaj osnovnih operacij na seznamih
     -- V pomoč naj vam bodo testi na koncu funkcij
-    _++_ : {!   !}
-    _++_ = {!   !}
 
-    len : {!   !}
-    len = {!   !}
+    _++_ : {A : Set} → List A → List A → List A
+    xs ++ ys = ys  
+    x ∷ xs ++ ys = x ∷ (xs ++ ys)
 
-    reverse : {!   !}
-    reverse = {!   !}
+    len : {A : Set} → List A → ℕ
+    len [] = O
+    len (x ∷ x1 ) = S(len x1 )
 
-    map : {!   !}
-    map = {!   !}
+    reverse : {A : Set} → List A → List A
+    reverse {A} xs = rev xs []
+        where 
+            rev : List A → List A → List A
+            rev [] acc = acc
+            rev (x ∷ xs) acc = rev xs (x ∷ acc)
+
+    map : {A B : Set} → (A → B) → List A → List B 
+    map f [] = []
+    map f (x ∷ xs) = f x ∷ map f xs
 
     -- Ko potrebujemo dodatno informacijo si pomagamo z with
 
@@ -85,8 +93,9 @@ module List where
     ... | 𝕗 = filter f l
     ... | 𝕥 = x ∷ (filter f l)
 
-    _[_] : {!   !}
-    _[_] = {!   !}
+    _[_] : {A : Set} → List A → (n : ℕ )→ A
+    [] [ n ] = {!   !}
+    x ∷ xs [ n ] = {!   !}
 
 -- Odvisni tipi
 
@@ -104,16 +113,16 @@ module Vector where
         _∷_ : {n : ℕ} → A → Vector A n → Vector A (S n)
     
     _++_ : {A : Set} {n m : ℕ} → Vector A n → Vector A m → Vector A (n + m)
-    []       ++ ys  =  ys
+    [] ++ ys  =  ys
     (x ∷ xs) ++ ys  =  x ∷ (xs ++ ys)
 
     -- Za določene tipe vektorjev lahko vedno dobimo glavo in rep
 
     head : {A : Set} → {n : ℕ} → Vector A (S n) → A
-    head = {!   !}
+    head (x ∷ xs) = x
 
-    tail : {!   !}
-    tail = {!   !}
+    tail : {A : Set} → {n : ℕ} → Vector A (S n) → Vector A n
+    tail v = {! v !}
 
     map : {!   !}
     map = {!   !}
