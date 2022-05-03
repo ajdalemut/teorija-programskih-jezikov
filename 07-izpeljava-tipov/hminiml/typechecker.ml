@@ -47,10 +47,10 @@ let rec unify = function
       unify ((ty1, ty1') :: (ty2, ty2') :: eqs)
   | (ParamTy p, ty) :: eqs when not (occurs p ty) ->
       let subst = unify (subst_eqs [ (p, ty) ] eqs) in
-      compose_subst [ (p, ty) ] subst
+      compose_subst [ (p, subst_ty subst ty) ] subst
   | (ty, ParamTy p) :: eqs when not (occurs p ty) ->
       let subst = unify (subst_eqs [ (p, ty) ] eqs) in
-      compose_subst [ (p, ty) ] subst
+      compose_subst [ (p, subst_ty subst ty) ] subst
   | (ty1, ty2) :: _ ->
       failwith
         ("Cannot unify types " ^ string_of_ty ty1 ^ " and " ^ string_of_ty ty2
