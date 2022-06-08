@@ -1,0 +1,65 @@
+effect Izberi : unit -> bool
+effect SesujSe : unit -> empty
+
+let odloci_se x y =
+    if perform (Izberi ()) then x else y
+
+let sesuj_se () = perform (SesujSe ()); 0
+
+let rec izberi_stevilo_med m n =
+    if m <= n then
+        if perform (Izberi ()) then
+            m
+        else
+            izberi_stevilo_med (m + 1) n
+    else
+        (perform (SesujSe ());
+        0)
+
+let koren c2 =
+    let rec aux c =
+        if c * c = c2 then c
+        else if c * c > c2 then sesuj_se ()
+        else aux (c + 1)
+    in
+    aux 0
+
+let pitagorejske_trojice n =
+    let a = izberi_stevilo_med 1 (n - 1) in
+    let b = izberi_stevilo_med (a + 1) n in
+    let c2 = a * a + b * b in
+    (a, b, koren c2)
+
+let naberi_vse_moznosti_v_seznam =
+    handler
+        | effect (Izberi ()) k -> k true @ k false
+        | effect (SesujSe ()) k -> []
+        | x -> [x]
+
+type 'a mogoce =
+    | NimamNic
+    | Imam of 'a
+
+
+let izberi_prvo_moznost =
+    handler
+        | effect (Izberi ()) k ->
+            (
+                match k false with
+                | Imam y -> Imam y
+                | NimamNic -> k true
+            )
+        | effect (SesujSe ()) k -> NimamNic
+        | x -> Imam x
+
+let _ =
+    with naberi_vse_moznosti_v_seznam handle
+        pitagorejske_trojice 20
+
+let _ =
+    with naberi_vse_moznosti_v_seznam handle
+        izberi_stevilo_med 10 30
+
+let _ =
+    with izberi_prvo_moznost handle
+        pitagorejske_trojice 20

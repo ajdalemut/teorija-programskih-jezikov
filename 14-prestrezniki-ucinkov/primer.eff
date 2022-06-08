@@ -1,0 +1,12 @@
+effect Izpisi : string -> unit
+
+let izpisi_vrstico str = perform (Izpisi (str ^ "\n"))
+
+let m =
+    handle
+        perform (Print "A\n");
+        perform (Print "B\n");
+        perform (Print "C\n");
+        10
+    with
+    | effect (Print msg) k -> k (); perform (Print msg); 0

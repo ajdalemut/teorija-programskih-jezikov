@@ -1,0 +1,1 @@
+Vse primere lahko poženete na https://www.eff-lang.org/try/, kjer najdete še več primerov uporabe prestreznikov.
